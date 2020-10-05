@@ -23,10 +23,12 @@ var modulemapper = require('cordova/modulemapper');
 
 var browserWrap, popup, navigationButtonsDiv, navigationButtonsDivInner, backButton, forwardButton, closeButton;
 
-function attachNavigationEvents (element, callback) {
+function attachNavigationEvents(element, callback) {
+    const popup = element;
     var onError = function () {
+
         try {
-            callback({ type: 'loaderror', url: this.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
+            callback({ type: 'loaderror', url: popup.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
         } catch (err) {
             // blocked by CORS :\
             callback({ type: 'loaderror', url: null }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
@@ -35,7 +37,7 @@ function attachNavigationEvents (element, callback) {
 
     element.addEventListener('pageshow', function () {
         try {
-            callback({ type: 'loadstart', url: this.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
+            callback({ type: 'loadstart', url: popup.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
         } catch (err) {
             // blocked by CORS :\
             callback({ type: 'loadstart', url: null }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
@@ -44,7 +46,7 @@ function attachNavigationEvents (element, callback) {
 
     element.addEventListener('load', function () {
         try {
-            callback({ type: 'loadstop', url: this.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
+            callback({ type: 'loadstop', url: popup.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
         } catch (err) {
             // blocked by CORS :\
             callback({ type: 'loadstop', url: null }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
@@ -92,9 +94,9 @@ var IAB = {
                 browserWrap.style.top = '0';
                 browserWrap.style.left = '0';
                 browserWrap.style.boxSizing = 'border-box';
-                browserWrap.style.borderWidth = '40px';
-                browserWrap.style.width = '100vw';
-                browserWrap.style.height = '100vh';
+                browserWrap.style.borderWidth = '10px';
+                browserWrap.style.width = '100%';
+                browserWrap.style.height = '100%';
                 browserWrap.style.borderStyle = 'solid';
                 browserWrap.style.borderColor = 'rgba(0,0,0,0.25)';
 
@@ -114,8 +116,7 @@ var IAB = {
             popup = document.createElement('iframe');
             popup.style.borderWidth = '0px';
             popup.style.width = '100%';
-
-            browserWrap.appendChild(popup);
+            popup.setAttribute("sandbox","allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts")
 
             if (features.indexOf('location=yes') !== -1 || features.indexOf('location') === -1) {
                 popup.style.height = 'calc(100% - 60px)';
@@ -124,16 +125,17 @@ var IAB = {
                 navigationButtonsDiv = document.createElement('div');
                 navigationButtonsDiv.style.height = '60px';
                 navigationButtonsDiv.style.backgroundColor = '#404040';
+                navigationButtonsDiv.style.textAlign = 'right';
+
                 navigationButtonsDiv.style.zIndex = '999';
                 navigationButtonsDiv.onclick = function (e) {
                     e.cancelBubble = true;
                 };
 
                 navigationButtonsDivInner = document.createElement('div');
-                navigationButtonsDivInner.style.paddingTop = '10px';
+                navigationButtonsDivInner.style.padding = '10px';
                 navigationButtonsDivInner.style.height = '50px';
-                navigationButtonsDivInner.style.width = '160px';
-                navigationButtonsDivInner.style.margin = '0 auto';
+                navigationButtonsDivInner.style.marginLeft = 'auto';
                 navigationButtonsDivInner.style.backgroundColor = '#404040';
                 navigationButtonsDivInner.style.zIndex = '999';
                 navigationButtonsDivInner.onclick = function (e) {
@@ -170,6 +172,8 @@ var IAB = {
                 closeButton.style.width = '40px';
                 closeButton.style.height = '40px';
                 closeButton.style.borderRadius = '40px';
+                closeButton.style.color = "#404040";
+                closeButton.style.backgroundColor = "white"
 
                 closeButton.innerHTML = '✖';
                 closeButton.addEventListener('click', function (e) {
@@ -182,8 +186,8 @@ var IAB = {
                 backButton.disabled = true;
                 forwardButton.disabled = true;
 
-                navigationButtonsDivInner.appendChild(backButton);
-                navigationButtonsDivInner.appendChild(forwardButton);
+                // navigationButtonsDivInner.appendChild(backButton);
+                // navigationButtonsDivInner.appendChild(forwardButton);
                 navigationButtonsDivInner.appendChild(closeButton);
                 navigationButtonsDiv.appendChild(navigationButtonsDivInner);
 
@@ -191,6 +195,8 @@ var IAB = {
             } else {
                 popup.style.height = '100%';
             }
+
+            browserWrap.appendChild(popup);
 
             // start listening for navigation events
             attachNavigationEvents(popup, win);
