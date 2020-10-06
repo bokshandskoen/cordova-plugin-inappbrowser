@@ -47,7 +47,7 @@ function attachNavigationEvents(element, callback, windowRef) {
 
     element.addEventListener('load', function () {
         try {
-            topWindowRef.postMessage("Finished loading => ", JSON.stringify(popup));
+            popup.postMessage("Finished loading => ", JSON.stringify(popup), "*");
         } catch (err) {
             topWindowRef.postMessage("Finished loading => null");
         }
