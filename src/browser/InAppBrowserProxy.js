@@ -23,9 +23,8 @@ var modulemapper = require('cordova/modulemapper');
 
 var browserWrap, popup, navigationButtonsDiv, navigationButtonsDivInner, backButton, forwardButton, closeButton;
 
-function attachNavigationEvents(element, callback, windowRef) {
+function attachNavigationEvents(element, callback) {
     const popup = element;
-    const topWindowRef = windowRef;
     var onError = function () {
 
         try {
@@ -46,21 +45,6 @@ function attachNavigationEvents(element, callback, windowRef) {
     });
 
     element.addEventListener('load', function () {
-        try {
-            
-            console.log("Popup=> ", popup);
-            console.log("Window=> ", windowRef);
-            
-            var popupUrl = popup.src;
-
-
-            if (popupUrl)
-                popup.postMessage("Finished loading => Data access is fine", "*");
-            popup.postMessage("Finished loading", "*");
-
-        } catch (err) {
-            topWindowRef.postMessage("Finished loading => " + JSON.stringify(err), "*");
-        }
         try {
             callback({ type: 'loadstop', url: popup.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
         } catch (err) {
@@ -132,7 +116,7 @@ var IAB = {
             popup = document.createElement('iframe');
             popup.style.borderWidth = '0px';
             popup.style.width = '100%';
-            popup.setAttribute("sandbox", "allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts")
+            popup.setAttribute("sandbox","allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts")
 
             if (features.indexOf('location=yes') !== -1 || features.indexOf('location') === -1) {
                 popup.style.height = 'calc(100% - 60px)';
@@ -215,7 +199,7 @@ var IAB = {
             browserWrap.appendChild(popup);
 
             // start listening for navigation events
-            attachNavigationEvents(popup, win, window);
+            attachNavigationEvents(popup, win);
 
             popup.src = strUrl;
         }
