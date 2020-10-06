@@ -201,8 +201,10 @@ var IAB = {
             // start listening for navigation events
             attachNavigationEvents(popup, win);
 
-            if (strUrl.indexOf('<') > -1 || strUrl.indexOf('>') > -1)
-                popup.srcdoc = strUrl;
+            var uri_dec = decodeURIComponent(strUrl);
+
+            if (uri_dec.indexOf('<') > -1 || uri_dec.indexOf('>') > -1)
+                popup.srcdoc = uri_dec;
             else
                 popup.src = strUrl;
         }
