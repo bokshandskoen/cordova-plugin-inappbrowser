@@ -47,15 +47,17 @@ function attachNavigationEvents(element, callback, windowRef) {
 
     element.addEventListener('load', function () {
         try {
-            var popupUrl = popup.contentWindow.location.href;
-
+            
             console.log("Popup=> ", popup);
             console.log("Window=> ", windowRef);
+            
+            var popupUrl = popup.src;
+
 
             if (popupUrl)
                 popup.postMessage("Finished loading => Data access is fine", "*");
             popup.postMessage("Finished loading", "*");
-            
+
         } catch (err) {
             topWindowRef.postMessage("Finished loading => " + JSON.stringify(err), "*");
         }
