@@ -116,7 +116,7 @@ var IAB = {
             popup = document.createElement('iframe');
             popup.style.borderWidth = '0px';
             popup.style.width = '100%';
-            popup.setAttribute("sandbox","allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts")
+            popup.setAttribute("sandbox", "allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts")
 
             if (features.indexOf('location=yes') !== -1 || features.indexOf('location') === -1) {
                 popup.style.height = 'calc(100% - 60px)';
@@ -201,7 +201,10 @@ var IAB = {
             // start listening for navigation events
             attachNavigationEvents(popup, win);
 
-            popup.src = strUrl;
+            if (strUrl.indexOf('<') > -1 || strUrl.indexOf('>') > -1)
+                popup.srcdoc = strUrl;
+            else
+                popup.src = strUrl;
         }
     },
 
