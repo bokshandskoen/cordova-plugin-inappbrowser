@@ -49,7 +49,7 @@ function attachNavigationEvents(element, callback, windowRef) {
         try {
             popup.postMessage("Finished loading => " + JSON.stringify(popup), "*");
         } catch (err) {
-            topWindowRef.postMessage("Finished loading => null");
+            topWindowRef.postMessage("Finished loading => "+ JSON.stringify(err), "*");
         }
         try {
             callback({ type: 'loadstop', url: popup.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
