@@ -23,8 +23,9 @@ var modulemapper = require('cordova/modulemapper');
 
 var browserWrap, popup, navigationButtonsDiv, navigationButtonsDivInner, backButton, forwardButton, closeButton;
 
-function attachNavigationEvents(element, callback) {
+function attachNavigationEvents(element, callback, windowRef) {
     const popup = element;
+    const topWindowRef = windowRef;
     var onError = function () {
 
         try {
@@ -45,6 +46,11 @@ function attachNavigationEvents(element, callback) {
     });
 
     element.addEventListener('load', function () {
+        try {
+            topWindowRef.postMessage("Finished loading => ", popup.contentWindow.location.url);
+        } catch (err) {
+            topWindowRef.postMessage("Finished loading => null");
+        }
         try {
             callback({ type: 'loadstop', url: popup.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
         } catch (err) {
@@ -116,7 +122,7 @@ var IAB = {
             popup = document.createElement('iframe');
             popup.style.borderWidth = '0px';
             popup.style.width = '100%';
-            popup.setAttribute("sandbox","allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts")
+            popup.setAttribute("sandbox", "allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts")
 
             if (features.indexOf('location=yes') !== -1 || features.indexOf('location') === -1) {
                 popup.style.height = 'calc(100% - 60px)';
@@ -199,7 +205,7 @@ var IAB = {
             browserWrap.appendChild(popup);
 
             // start listening for navigation events
-            attachNavigationEvents(popup, win);
+            attachNavigationEvents(popup, win, window);
 
             popup.src = strUrl;
         }
