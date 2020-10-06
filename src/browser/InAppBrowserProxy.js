@@ -47,9 +47,17 @@ function attachNavigationEvents(element, callback, windowRef) {
 
     element.addEventListener('load', function () {
         try {
-            popup.postMessage("Finished loading => " + JSON.stringify(popup), "*");
+            var popupUrl = popup.contentWindow.location.href;
+
+            console.log("Popup=> ", popup);
+            console.log("Window=> ", windowRef);
+
+            if (popupUrl)
+                popup.postMessage("Finished loading => Data access is fine", "*");
+            popup.postMessage("Finished loading", "*");
+            
         } catch (err) {
-            topWindowRef.postMessage("Finished loading => "+ JSON.stringify(err), "*");
+            topWindowRef.postMessage("Finished loading => " + JSON.stringify(err), "*");
         }
         try {
             callback({ type: 'loadstop', url: popup.contentWindow.location.href }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
