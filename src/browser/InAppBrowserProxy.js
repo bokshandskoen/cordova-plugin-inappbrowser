@@ -204,9 +204,15 @@ var IAB = {
             var uri_dec = decodeURIComponent(strUrl);
 
             if (uri_dec.indexOf('<') > -1 || uri_dec.indexOf('>') > -1)
+            {
+                console.log("FORM!!")
                 popup.srcdoc = uri_dec;
+            }
             else
+            {
+                console.log("URL!!")
                 popup.src = strUrl;
+            }
         }
     },
 
