@@ -175,7 +175,8 @@ var IAB = {
                 closeButton.style.color = "#404040";
                 closeButton.style.backgroundColor = "white"
 
-                closeButton.innerHTML = '✖';
+                // closeButton.innerHTML = '✖';
+                 closeButton.innerHTML = 'Continue';
                 closeButton.addEventListener('click', function (e) {
                     setTimeout(function () {
                         IAB.close();
