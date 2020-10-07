@@ -169,11 +169,12 @@ var IAB = {
 
                 closeButton = document.createElement('button');
                 closeButton.style.marginLeft = '20px';
-                closeButton.style.width = '40px';
                 closeButton.style.height = '40px';
                 closeButton.style.borderRadius = '40px';
                 closeButton.style.color = "#404040";
                 closeButton.style.backgroundColor = "white"
+                closeButton.style.fontWeight = "bold";
+                
 
                 // closeButton.innerHTML = '✖';
                  closeButton.innerHTML = 'Continue';
